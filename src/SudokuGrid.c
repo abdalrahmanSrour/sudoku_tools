@@ -13,7 +13,7 @@ typedef struct _Sudoku_Grid
 Sudoku_Grid *sudoku_grid_create(void)
 {
     _Sudoku_Grid *grid = calloc(1, sizeof(_Sudoku_Grid *));
-    grid->cells = calloc(SUDOKU_GRID_SIZE, sizeof(Sudoku_Cell*));
+    grid->cells = calloc(SUDOKU_GRID_SIZE, sizeof(Sudoku_Cell *));
     grid->missing = 0;
 
     return (Sudoku_Grid *)grid;
@@ -234,25 +234,27 @@ bool sudoku_grid_is_valid(Sudoku_Grid *grid)
         int v = sudoku_cell_value_get(grid_o->cells[index]);
         SUDOKU_CELL_INDEX_TO_RC(index, r, c);
 
-#define SUDOKU_GRID_VALIDATE_AT(index, r, c)                      \
-    {                                                             \
-        int n_ind = SUDOKU_CELL_RC_TO_INDEX(r, c);                \
-        if (n_ind == index)                                       \
-            continue; /* skip same cell */                        \
-                                                                  \
-        /* Incomplete grid not allowed */                         \
-        if (!grid_o->cells[n_ind])                                \
-        {                                                         \
-            DBGF("Incomplete grid %d @ (%d, %d)\n", index, r, c); \
-            return false;                                         \
-        }                                                         \
-                                                                  \
-        /* Same value not allowed */                              \
-        if (v == sudoku_cell_value_get(grid_o->cells[n_ind]))     \
-        {                                                         \
-            DBGF("Same value %d @ (%d, %d)\n", index, r, c); \
-            return false;                                         \
-        }                                                         \
+#define SUDOKU_GRID_VALIDATE_AT(index, r, c)                                                  \
+    {                                                                                         \
+        int n_ind = SUDOKU_CELL_RC_TO_INDEX(r, c);                                            \
+        if (n_ind == index)                                                                   \
+            continue; /* skip same cell */                                                    \
+                                                                                              \
+        /* Incomplete grid not allowed */                                                     \
+        if (!grid_o->cells[n_ind])                                                            \
+        {                                                                                     \
+            DBGF("Incomplete grid (%d, %d)\n", index, r + 1, c + 1);                          \
+            return false;                                                                     \
+        }                                                                                     \
+                                                                                              \
+        /* Same value not allowed */                                                          \
+        if (v == sudoku_cell_value_get(grid_o->cells[n_ind]))                                 \
+        {                                                                                     \
+            int rr, cc;                                                                       \
+            SUDOKU_CELL_INDEX_TO_RC(index, rr, cc);                                           \
+            DBGF("Same value %d @ (%d, %d) and (%d, %d)\n", v, rr + 1, cc + 1, r + 1, c + 1); \
+            return false;                                                                     \
+        }                                                                                     \
     }
 
         // DBG("validate Row");
@@ -293,19 +295,20 @@ bool sudoku_grid_is_valid(Sudoku_Grid *grid)
 char *sudoku_grid_print(Sudoku_Grid *grid)
 {
     char *outBuf = NULL;
-    _Sudoku_Grid *grid_o = (_Sudoku_Grid*) grid;
+    _Sudoku_Grid *grid_o = (_Sudoku_Grid *)grid;
     int index = 0;
 
-    if (!grid_o) return NULL;
+    if (!grid_o)
+        return NULL;
 
     outBuf = calloc(SUDOKU_GRID_SIZE * 3, sizeof(char));
 
     while (index < SUDOKU_GRID_SIZE)
     {
-        sprintf(outBuf + index * 2, "%d%s", 
+        sprintf(outBuf + index * 2, "%d%s",
                 (grid_o->cells[index]) ? sudoku_cell_value_get(grid_o->cells[index]) : 0,
                 (!((index + 1) % 9)) ? "\n" : " ");
-        index ++;
+        index++;
     }
     return outBuf;
 }
