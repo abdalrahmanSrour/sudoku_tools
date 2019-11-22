@@ -4,50 +4,86 @@ unsigned char verboseMode = 0;
 const char *filename = NULL;
 const char *appname = NULL;
 
-int validateSudokuGrid(int isFile, char *filename)
+int generateSudokuGrid(void)
 {
-    // TODO: read file content, or read from stdin
+    Sudoku_Grid *grid = sudoku_grid_create();
 
-    // TODO: parse grid, and create SudokuGrid object
+    DBG("Generate grid");
+    if (sudoku_grid_generate(grid))
+    {
+        printf("Couldn't generate sudoku grid! :(\n");
+        exit(1);
+    }
+    else
+    {
+        printf("Sudoku grid generated successfuly! horaay :)\n");
+    }
+    
+    
+    char *buf = sudoku_grid_print(grid);
 
-    // TODO: Validate grid
+    if (!buf)
+    {
+        printf("Couldn't generate sudoku grid! :(\n");
+        exit(1);
+    }
 
-    // TODO: Show result
+    DBGF("Sudoku grid generated successfuly!\n----\n%s\n----\n", buf);
+
+    if (filename)
+    {
+        printf("Write to file > %s\n", filename);
+        FILE *f = fopen(filename, "wb+");
+        if (!f)
+        {
+            printf("Can't open file!\n");
+            exit(1);
+        }
+        fprintf(f, "Generated using SudokuGenerator, created by Abed Srour <eng.abdsrour@gmail.com>\n%s\n", buf);
+        fclose(f);
+    }
 }
 
-void showArgsMessage()
+void showArgsMessage(void)
 {
-    puts("Sudoku grid Generator, made by Abed Srour <eng.abdsrour@gmail.com>");
+    puts("Sudoku grid generator, made by Abed Srour <eng.abdsrour@gmail.com>");
     puts("---------------------------------------------------------------");
-    
     puts("Usage:");
     printf("%s [-h] [-f file] [-v]", appname);
     puts("");
-    puts("\t-h\tHelp: to show this help message!\n");
-    puts("\t-f file\tFile: to write sudoku grid into file");
-    puts("\t\tIf no file provided stdout will be used");
-    puts("\t-v\tVerbose: to enable verbose mode");
+    puts("\t-h\t\t\tHelp: to show this help message!\n");
+    puts("\t-f filePath\t\tFile: to write sudoku grid to file");
+    puts("\t\t\t\tOtherwise stdout will be used to show grid");
+    puts("\t-v\t\t\tVerbose: to enable verbose mode");
     puts("---------------------------------------------------------------");
 }
 
-void parseArgs(int argc, const char **argv) {
+void parseArgs(int argc, const char **argv)
+{
     appname = argv[0];
 
-    // TODO: parse args
-    if ( argc > 2 ) {
-        for ( int ii = 1; ii < argc; ii++ ) {
-            if (!strncmp("-h", argv[ii], 2)) { // Help
+    if (argc >= 2)
+    {
+        for (int ii = 1; ii < argc; ii++)
+        {
+            if (!strncmp("-h", argv[ii], 2))
+            { // Help
                 showArgsMessage();
                 exit(0);
-            } else if (!strncmp("-f", argv[ii], 2)) {
-                if (ii == argc || argv[ii+1] == "-") {
+            }
+            else if (!strncmp("-f", argv[ii], 2))
+            { // File
+                if (ii + 1 == argc || argv[ii + 1] == "-")
+                {
                     puts("No file input provided!");
                     showArgsMessage();
                     exit(1);
                 }
-                ii ++;
+                ii++;
                 filename = argv[ii];
-            } else if (!strncmp("-v", argv[ii], 2)) {
+            }
+            else if (!strncmp("-v", argv[ii], 2))
+            { // Verbose
                 verboseMode = 1;
             }
         }
@@ -58,6 +94,8 @@ int main(int argc, char const *argv[])
 {
     parseArgs(argc, argv);
 
-    printf("appname=%s filename=%s v=%d", appname, filename, verboseMode);
+    DBGF("appname=%s filename=%s v=%d\n", appname, filename, verboseMode);
+
+    generateSudokuGrid();
     return 0;
 }
