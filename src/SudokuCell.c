@@ -35,9 +35,9 @@ int sudoku_cell_correct_set(Sudoku_Cell *cell, int correct)
 {
     _SUDOKU_CELL *cell_o = (_SUDOKU_CELL *)cell;
     if (!cell_o)
-        return 1;
+        return -1;
     if (!SUDOKU_CELL_VAL_CHECK(correct))
-        return 1;
+        return -1;
 
     cell_o->correct = correct;
     return 0;
@@ -47,7 +47,7 @@ int sudoku_cell_correct_get(Sudoku_Cell *cell)
 {
     _SUDOKU_CELL *cell_o = (_SUDOKU_CELL *)cell;
     if (!cell_o)
-        return 1;
+        return -1;
 
     return cell_o->correct;
 }
@@ -56,7 +56,7 @@ int sudoku_cell_init_get(Sudoku_Cell *cell)
 {
     _SUDOKU_CELL *cell_o = (_SUDOKU_CELL *)cell;
     if (!cell_o)
-        return 1;
+        return -1;
 
     return cell_o->init;
 }
@@ -65,9 +65,9 @@ int sudoku_cell_value_set(Sudoku_Cell *cell, int val)
 {
     _SUDOKU_CELL *cell_o = (_SUDOKU_CELL *)cell;
     if (!cell_o || cell_o->readonly)
-        return 1;
+        return -1;
     if (!SUDOKU_CELL_VAL_CHECK(val))
-        return 1;
+        return -1;
 
     cell_o->value = val;
     return 0;
@@ -77,7 +77,7 @@ int sudoku_cell_value_get(Sudoku_Cell *cell)
 {
     _SUDOKU_CELL *cell_o = (_SUDOKU_CELL *)cell;
     if (!cell_o)
-        return 1;
+        return -1;
 
     return (cell_o->readonly) ? cell_o->correct : cell_o->value;
 }
