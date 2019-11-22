@@ -8,11 +8,11 @@ typedef struct {
     int index;
     int value;
     bool readonly;
-} Sudoku_Cell_;
+} _SUDOKU_CELL;
 
 Sudoku_Cell *sudoku_cell_create(int init, int correct, bool readonly, int index)
 {
-    Sudoku_Cell_ *cell = calloc(1, sizeof(Sudoku_Cell_));
+    _SUDOKU_CELL *cell = calloc(1, sizeof(_SUDOKU_CELL));
     cell->correct = (SUDOKU_CELL_VAL_CHECK(correct)) ? correct : -1;
     cell->init = (SUDOKU_CELL_VAL_CHECK(init)) ? init : cell->correct;
     cell->readonly = readonly;
@@ -31,7 +31,7 @@ void sudoku_cell_del(Sudoku_Cell *cell)
 
 int sudoku_cell_correct_set(Sudoku_Cell *cell, int correct)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return 1;
     if (!SUDOKU_CELL_VAL_CHECK(correct)) return 1;
 
@@ -41,7 +41,7 @@ int sudoku_cell_correct_set(Sudoku_Cell *cell, int correct)
 
 int sudoku_cell_correct_get(Sudoku_Cell *cell)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return 1;
 
     return cell_o->correct;
@@ -49,7 +49,7 @@ int sudoku_cell_correct_get(Sudoku_Cell *cell)
 
 int sudoku_cell_init_get(Sudoku_Cell *cell)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return 1;
 
     return cell_o->init;
@@ -57,7 +57,7 @@ int sudoku_cell_init_get(Sudoku_Cell *cell)
 
 int sudoku_cell_value_set(Sudoku_Cell *cell, int val)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o || cell_o->readonly) return 1;
     if (!SUDOKU_CELL_VAL_CHECK(val)) return 1;
 
@@ -67,7 +67,7 @@ int sudoku_cell_value_set(Sudoku_Cell *cell, int val)
 
 int sudoku_cell_value_get(Sudoku_Cell *cell)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return 1;
 
     return (cell_o->readonly) ? cell_o->correct : cell_o->value;
@@ -75,7 +75,7 @@ int sudoku_cell_value_get(Sudoku_Cell *cell)
 
 int sudoku_cell_index_get(Sudoku_Cell *cell)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return -1;
 
     return cell_o->index;
@@ -83,7 +83,7 @@ int sudoku_cell_index_get(Sudoku_Cell *cell)
 
 void sudoku_cell_row_col_get(Sudoku_Cell *cell, int *row, int *col)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return;
 
     int r, c;
@@ -96,7 +96,7 @@ void sudoku_cell_row_col_get(Sudoku_Cell *cell, int *row, int *col)
 
 bool sudoku_cell_is_correct(Sudoku_Cell *cell)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return false;
 
     return (cell_o->readonly) ? true : cell_o->correct == cell_o->value;
@@ -104,7 +104,7 @@ bool sudoku_cell_is_correct(Sudoku_Cell *cell)
 
 bool sudoku_cell_is_readonly(Sudoku_Cell *cell)
 {
-    Sudoku_Cell_ *cell_o = (Sudoku_Cell_*)cell;
+    _SUDOKU_CELL *cell_o = (_SUDOKU_CELL*)cell;
     if (!cell_o) return false;
 
     return cell_o->readonly;
