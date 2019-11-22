@@ -52,7 +52,7 @@ void sudoku_cell_del(Sudoku_Cell *cell);
  * @param cell @type Sudoku_Cell*: sudoku cell handler
  * @param correct @type int: new value
  * 
- * @return int: whether value updated or not
+ * @return int: 0 if value changed
  */
 int sudoku_cell_correct_set(Sudoku_Cell *cell, int correct);
 
