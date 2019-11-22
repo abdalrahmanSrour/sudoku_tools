@@ -88,8 +88,6 @@ int validateSudokuGrid(void)
         printf("Invalid input :(\nProvided Sudoku Grid is not valid\nNot matching game standards\nfor more info use (-v) flag\n");
         exit(1);
     }
-
-    DBG("Thank you!");
 }
 
 void showArgsMessage(void)
