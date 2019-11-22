@@ -1,13 +1,14 @@
 
 #include "../inc/SudokuCell.h"
 #include "../inc/SudokuGrid.h"
+#include <time.h>
 
 #define SUDOKU_GRID_SIZE 81
 
 typedef struct _Sudoku_Grid
 {
-    Sudoku_Cell **cells;
     int missing;
+    Sudoku_Cell **cells;
 } _Sudoku_Grid;
 
 Sudoku_Grid *sudoku_grid_create(void)
@@ -128,9 +129,181 @@ void sudoku_grid_del(Sudoku_Grid **grid)
     *grid = NULL;
 }
 
+static int *sudoku_grid_generate_diagonal(void)
+{
+    int r_min = 0, r_max = 3, c_min = 0, c_max = 3;
+    int *cells = calloc(SUDOKU_GRID_SIZE, sizeof(int));
+    int taken[10];
+
+    if (!cells)
+        return NULL;
+
+    srand(time(NULL)); // reset seed
+
+    while (r_min < 9) // this will loop 3 times
+    {
+        memset(taken, 0, 10 * sizeof(10)); // reset taken list
+
+        for (int ii = r_min; ii < r_max; ii++)
+        {
+            for (int jj = c_min; jj < c_max; jj++)
+            {
+                int v;
+                do
+                {
+                    v = (rand() % 9) + 1;
+                } while (taken[v]);
+                taken[v] = 1;
+                cells[SUDOKU_CELL_RC_TO_INDEX(ii, jj)] = v;
+            }
+        }
+
+        r_min = r_max;
+        r_max += 3;
+        c_min = c_max;
+        c_max += 3;
+    }
+    return cells;
+}
+
+static bool sudoku_grid_check_if_valid(int *cells, int v, int index)
+{
+    int r, c;
+    SUDOKU_CELL_INDEX_TO_RC(index, r, c);
+    int r_min = (r / 3) * 3;
+    int r_max = r_min + 3;
+    int c_min = (c / 3) * 3;
+    int c_max = c_min + 3;
+
+#define SUDOKU_GRID_VALIDATE_AT(index, r, c)          \
+    {                                                 \
+        int n_ind = SUDOKU_CELL_RC_TO_INDEX(r, c);    \
+        if (n_ind == index)                           \
+            continue; /* skip same cell */            \
+                                                      \
+        /* Same value not allowed */                  \
+        if (v == cells[n_ind])                        \
+        {                                             \
+            return false;                             \
+        }                                             \
+    }
+
+    // validate row
+    for (int ii = 0; ii < 9; ii++)
+    {
+        SUDOKU_GRID_VALIDATE_AT(index, ii, c);
+    }
+
+    // validate col
+    for (int ii = 0; ii < 9; ii++)
+    {
+        SUDOKU_GRID_VALIDATE_AT(index, r, ii);
+    }
+
+    // validate block
+    for (int ii = r_min; ii < r_max; ii++)
+    {
+        for (int jj = c_min; jj < c_max; jj++)
+        {
+            SUDOKU_GRID_VALIDATE_AT(index, ii, jj);
+        }
+    }
+
+    return true;
+#undef SUDOKU_GRID_VALIDATE_AT
+}
+
+static bool sudoku_grid_fill_grid_rec(int *cells, int r, int c)
+{
+    if (c >= 9 && r < 9 - 1)
+    {
+        r = r + 1;
+        c = 0;
+    }
+
+    if (r >= 9 && c >= 9)
+        return true;
+
+    if (r < 3)
+    {
+        if (c < 3)
+            c = 3;
+    }
+    else if (r < 9 - 3)
+    {
+        if (c == (int)(r / 3) * 3)
+            c = c + 3;
+    }
+    else
+    {
+        if (c == 9 - 3)
+        {
+            r = r + 1;
+            c = 0;
+            if (r >= 9)
+                return true;
+        }
+    }
+
+    for (int num = 1; num <= 9; num++)
+    {
+        if (sudoku_grid_check_if_valid(cells, num, SUDOKU_CELL_RC_TO_INDEX(r, c)))
+        {
+            cells[SUDOKU_CELL_RC_TO_INDEX(r, c)] = num;
+            if (sudoku_grid_fill_grid_rec(cells, r, c + 1))
+                return true;
+
+            cells[SUDOKU_CELL_RC_TO_INDEX(r, c)] = 0;
+        }
+    }
+    return false;
+}
+
+static void sudoku_grid_fill_grid(int *cells)
+{
+    sudoku_grid_fill_grid_rec(cells, 0, 3);
+}
+
 int sudoku_grid_generate(Sudoku_Grid *grid)
 {
-#warning "Not implemented"
+    _Sudoku_Grid *grid_o = (_Sudoku_Grid *)grid;
+    int *cells = NULL;
+    int index = 0;
+
+    if (!grid_o)
+        return 1;
+
+    DBG("Generate diagonal!");
+    cells = sudoku_grid_generate_diagonal();
+
+    if (!cells)
+        return 2;
+
+    DBG("Generate rest of grid!");
+    sudoku_grid_fill_grid(cells);
+
+    DBG("Fill grid with new values!");
+    while (index < SUDOKU_GRID_SIZE)
+    {
+        int r, c;
+        SUDOKU_CELL_INDEX_TO_RC(index, r, c);
+        if (!(grid_o->cells[index]))
+        {
+            grid_o->cells[index] = sudoku_cell_create(-1, cells[index], true, index);
+            if (!grid_o->cells[index])
+                return 2;
+        }
+        else
+        {
+            if (sudoku_cell_correct_set(grid_o->cells[index], cells[index]))
+                return 2;
+            if (sudoku_cell_value_set(grid_o->cells[index], cells[index]))
+                return 2;
+        }
+        index++;
+    }
+
+    return 0;
 }
 
 int sudoku_grid_update_at(Sudoku_Grid *grid, int row, int col, int val)
@@ -297,6 +470,7 @@ char *sudoku_grid_print(Sudoku_Grid *grid)
     char *outBuf = NULL;
     _Sudoku_Grid *grid_o = (_Sudoku_Grid *)grid;
     int index = 0;
+    int v;
 
     if (!grid_o)
         return NULL;
@@ -305,8 +479,10 @@ char *sudoku_grid_print(Sudoku_Grid *grid)
 
     while (index < SUDOKU_GRID_SIZE)
     {
+        if (grid_o->cells[index])
+            v = sudoku_cell_value_get(grid_o->cells[index]);
         sprintf(outBuf + index * 2, "%d%s",
-                (grid_o->cells[index]) ? sudoku_cell_value_get(grid_o->cells[index]) : 0,
+                (v >= 1 && v <= 9) ? v : 0,
                 (!((index + 1) % 9)) ? "\n" : " ");
         index++;
     }
