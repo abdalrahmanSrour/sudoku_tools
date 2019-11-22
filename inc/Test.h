@@ -6,13 +6,14 @@
     {                                \
         number_of_test = 0;          \
         number_of_correct_tests = 0; \
+        DBG("\n\n");                 \
     } while (0);
 
-#define TEST_FINISH()                                                          \
-    do                                                                         \
-    {                                                                          \
-        DBG("Test finish");                                                    \
-        DBGF("Test result: %d/%d\n", number_of_correct_tests, number_of_test); \
+#define TEST_FINISH()                                                              \
+    do                                                                             \
+    {                                                                              \
+        DBG("Test finish");                                                        \
+        DBGF("Test result: %d/%d\n\n", number_of_correct_tests, number_of_test); \
     } while (0);
 
 #define FAIL_EQ(a, b)                                                          \
