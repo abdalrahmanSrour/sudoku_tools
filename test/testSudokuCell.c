@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
     DBG("Start Sudoku_Cell tester");
     
     TEST_START();
-    Sudoku_Cell *cell = sudoku_cell_create(0, 5, true, SUDOKU_CELL_RC_TO_INDEX(0, 5));
+    Sudoku_Cell *cell = sudoku_cell_create(-1, 5, true, SUDOKU_CELL_RC_TO_INDEX(0, 5));
 
     FAIL_EQ(5, sudoku_cell_value_get(cell));
     FAIL_EQ(true, sudoku_cell_is_readonly(cell));

@@ -24,7 +24,7 @@ typedef struct _Sudoku_Cell Sudoku_Cell;
  * Create sudoku cell that hold the @p init value,
  * and expected @p correct value at @p index.
  * @p index can be translated to row and column.
- * Pass 0 to @p init to set Initial value same as @p correct
+ * @p init >= 0 and <= 9, otherwise correct value will be set
  * @p correct must be >= 1 and <= 9
  * @p index must be >= 0 and <= 80
  * 
