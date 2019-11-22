@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
 {
     parseArgs(argc, argv);
 
-    DBGf("Args result: appname=%s filename=%s v=%d", appname, filename, verboseMode);
+    DBGF("Args result: appname=%s filename=%s v=%d", appname, filename, verboseMode);
 
 
     return 0;
