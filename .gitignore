@@ -8,6 +8,8 @@
 
 *.o
 *.exe
+!bin/SudokuValidator.exe
+!bin/SudokuGenerator.exe
 *.stackdump
 
 TODO
