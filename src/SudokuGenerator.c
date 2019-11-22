@@ -16,7 +16,7 @@ int generateSudokuGrid(void)
     }
     else
     {
-        printf("Sudoku grid generated successfuly! horaay :)\n");
+        printf("Sudoku grid generated successfully! horaay :)\n");
     }
     
     
@@ -28,7 +28,7 @@ int generateSudokuGrid(void)
         exit(1);
     }
 
-    DBGF("Sudoku grid generated successfuly!\n----\n%s\n----\n", buf);
+    DBGF("Sudoku grid generated successfully!\n----\n%s\n----\n", buf);
 
     if (filename)
     {
@@ -41,7 +41,11 @@ int generateSudokuGrid(void)
         }
         fprintf(f, "Generated using SudokuGenerator, created by Abed Srour <eng.abdsrour@gmail.com>\n%s\n", buf);
         fclose(f);
+    } else
+    {
+        printf("Generated using SudokuGenerator, created by Abed Srour <eng.abdsrour@gmail.com>\n%s\n", buf);
     }
+    
 }
 
 void showArgsMessage(void)
@@ -53,7 +57,7 @@ void showArgsMessage(void)
     puts("");
     puts("\t-h\t\t\tHelp: to show this help message!\n");
     puts("\t-f filePath\t\tFile: to write sudoku grid to file");
-    puts("\t\t\t\tOtherwise stdout will be used to show grid");
+    puts("\t\t\t\tOtherwise stdout will be used to show grid\n");
     puts("\t-v\t\t\tVerbose: to enable verbose mode");
     puts("---------------------------------------------------------------");
 }

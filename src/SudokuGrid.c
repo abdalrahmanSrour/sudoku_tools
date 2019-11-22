@@ -105,7 +105,7 @@ Sudoku_Grid *sudoku_grid_create_from_str(const char *str)
             grid->missing++;
         }
     }
-    DBG("Sudoku grid created succesfully");
+    DBG("Sudoku grid created successfully");
 
     return (Sudoku_Grid *)grid;
 }

@@ -101,6 +101,8 @@ void showArgsMessage(void)
     puts("");
     puts("\t-h\t\t\tHelp: to show this help message!\n");
     puts("\t-f filePath\t\tFile: to read sudoku grid from file");
+    puts("\t\t\t\tOtherwise stdin will be used to read grid");
+    puts("\t\t\t\tto finish input using stdin just enter two times\n");
     puts("\t-v\t\t\tVerbose: to enable verbose mode");
     puts("---------------------------------------------------------------");
 }
