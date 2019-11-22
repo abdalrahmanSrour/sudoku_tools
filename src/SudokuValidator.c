@@ -5,7 +5,7 @@ unsigned char verboseMode = 0;
 const char *filename = NULL;
 const char *appname = NULL;
 
-#define MAX_BUF_SIZE (128 * 64) 
+#define MAX_BUF_SIZE (128 * 64)
 
 void readGridFrom(FILE *file, char *buf, size_t maxSize)
 {
@@ -23,10 +23,12 @@ void readGridFrom(FILE *file, char *buf, size_t maxSize)
         // if (chars == 0) break;
         if (!filename)
         {
-            if (chars == 1 && (line[0] == '\n' || line[0] == '\r')) break;
-            if (chars == 2 && !strcmp(line, "\r\n")) break;
+            if (chars == 1 && (line[0] == '\n' || line[0] == '\r'))
+                break;
+            if (chars == 2 && !strcmp(line, "\r\n"))
+                break;
         }
-        
+
         sprintf(buf + totalR, "%s\n", line);
         totalR = strlen(buf);
     }
@@ -73,14 +75,15 @@ int validateSudokuGrid(void)
 
     // TODO: Show result
     char *buff = sudoku_grid_print(grid);
-    
+
     if (buff)
     {
         printf("Input Sudoku grid is valid!! horaay :)\n");
         printf("Here is parsed board\n%s\n", buff);
 
         free(buff);
-    } else
+    }
+    else
     {
         printf("Invalid input :(\nProvided Sudoku Grid is not valid\nNot matching game standards\nfor more info use (-v) flag\n");
         exit(1);
@@ -93,7 +96,7 @@ void showArgsMessage(void)
 {
     puts("Sudoku grid validator, made by Abed Srour <eng.abdsrour@gmail.com>");
     puts("---------------------------------------------------------------");
-    
+
     puts("Usage:");
     printf("%s [-h] [-f file] [-v]", appname);
     puts("");
@@ -103,24 +106,32 @@ void showArgsMessage(void)
     puts("---------------------------------------------------------------");
 }
 
-void parseArgs(int argc, const char **argv) 
+void parseArgs(int argc, const char **argv)
 {
     appname = argv[0];
 
-    if ( argc >= 2 ) {
-        for ( int ii = 1; ii < argc; ii++ ) {
-            if (!strncmp("-h", argv[ii], 2)) { // Help
+    if (argc >= 2)
+    {
+        for (int ii = 1; ii < argc; ii++)
+        {
+            if (!strncmp("-h", argv[ii], 2))
+            { // Help
                 showArgsMessage();
                 exit(0);
-            } else if (!strncmp("-f", argv[ii], 2)) { // File
-                if (ii + 1 == argc || argv[ii+1] == "-") {
+            }
+            else if (!strncmp("-f", argv[ii], 2))
+            { // File
+                if (ii + 1 == argc || argv[ii + 1] == "-")
+                {
                     puts("No file input provided!");
                     showArgsMessage();
                     exit(1);
                 }
-                ii ++;
+                ii++;
                 filename = argv[ii];
-            } else if (!strncmp("-v", argv[ii], 2)) { // Verbose
+            }
+            else if (!strncmp("-v", argv[ii], 2))
+            { // Verbose
                 verboseMode = 1;
             }
         }
