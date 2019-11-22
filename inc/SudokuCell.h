@@ -17,7 +17,7 @@ typedef struct _Sudoku_Cell Sudoku_Cell;
 /**
  * Converts @p index to sudoku grid @p row, @p col
  */
-#define SUDOKU_CELL_INDEX_TO_RC(index, row, col) do { row = index / 9; col = index - (row * 9); } while(0);
+#define SUDOKU_CELL_INDEX_TO_RC(index, row, col) do { row = index / 9; col = index % 9; } while(0);
 
 
 /**

@@ -2,7 +2,7 @@
 
 #define SUDOKU_CELL_VAL_CHECK(v) ((v > 0) && (v < 10))
 
-typedef struct
+typedef struct _SUDOKU_CELL
 {
     int init;
     int correct;
