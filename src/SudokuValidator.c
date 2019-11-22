@@ -47,6 +47,7 @@ int validateSudokuGrid(void)
             printf("Unable to open file %s\n", filename);
         }
         readGridFrom(f, buf, MAX_BUF_SIZE);
+        fclose(f);
     }
     else
     {
