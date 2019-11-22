@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "sudokugrid.h": "c"
+        "sudokugrid.h": "c",
+        "test.h": "c"
     }
 }
