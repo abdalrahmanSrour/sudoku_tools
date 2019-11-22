@@ -22,12 +22,12 @@ int main(int argc, char const *argv[])
 
     FAIL_EQ(true, sudoku_cell_is_correct(cell));
 
-    FAIL_EQ(1, sudoku_cell_value_set(cell, 50));
+    FAIL_EQ(-1, sudoku_cell_value_set(cell, 50));
 
     FAIL_EQ(5, sudoku_cell_value_get(cell));
     FAIL_EQ(true, sudoku_cell_is_correct(cell));
 
-    FAIL_EQ(1, sudoku_cell_value_set(cell, 9));
+    FAIL_EQ(-1, sudoku_cell_value_set(cell, 9));
 
     FAIL_EQ(5, sudoku_cell_value_get(cell));
     FAIL_EQ(true, sudoku_cell_is_correct(cell));
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
 
     sudoku_cell_del(cell);
     cell = NULL;
-    FAIL_EQ(1, sudoku_cell_correct_set(cell, 9));
+    FAIL_EQ(-1, sudoku_cell_correct_set(cell, 9));
 
     
     cell = sudoku_cell_create(1, 6, false, SUDOKU_CELL_RC_TO_INDEX(7, 3));
@@ -54,7 +54,7 @@ int main(int argc, char const *argv[])
 
     FAIL_EQ(false, sudoku_cell_is_correct(cell));
 
-    FAIL_EQ(1, sudoku_cell_value_set(cell, 50));
+    FAIL_EQ(-1, sudoku_cell_value_set(cell, 50));
 
     FAIL_EQ(1, sudoku_cell_value_get(cell));
     FAIL_EQ(false, sudoku_cell_is_correct(cell));
@@ -77,7 +77,7 @@ int main(int argc, char const *argv[])
 
     sudoku_cell_del(cell);
     cell = NULL;
-    FAIL_EQ(1, sudoku_cell_correct_set(cell, 9));
+    FAIL_EQ(-1, sudoku_cell_correct_set(cell, 9));
     
     TEST_FINISH();
     return 0;
